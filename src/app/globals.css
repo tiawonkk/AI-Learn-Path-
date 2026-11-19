@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --canvas: #fbf9fd;
+  --surface: #ffffff;
+  --surface-subtle: #f7f3fb;
+  --surface-pill: #f3edf8;
+  --surface-hover: #f8f4fc;
+  --border-soft: #ece6f2;
+  --border-strong: #ddd3e8;
+  --shadow-card: 0 6px 24px rgba(35, 33, 36, 0.05);
+  --shadow-card-hover: 0 12px 30px rgba(83, 43, 113, 0.09);
+
+  /* Strict Brand Palette Tokens */
+  --plum: #532b71;
+  --plum-hover: #44215e;
+  --plum-soft: rgba(83, 43, 113, 0.08);
+  --lavender: #dda9ff;
+  --lavender-soft: rgba(221, 169, 255, 0.22);
+  --rose: #f19bb6;
+  --rose-soft: rgba(241, 155, 182, 0.2);
+  --yellow: #facf4e;
+  --yellow-hover: #f2c235;
+  --yellow-soft: rgba(250, 207, 78, 0.22);
+  --charcoal: #232124;
+
+  --brand: #532b71;
+  --brand-hover: #44215e;
+  --brand-soft: rgba(221, 169, 255, 0.2);
+
+  --text-main: #232124;
+  --text-sub: #4c4751;
+  --text-muted: #5c5761;
+
+  /* Strictly Charcoal Code Surfaces (Zero Navy) */
+  --code-surface: #232124;
+  --code-header: #2e2b30;
+  --code-border: #3e3a42;
+}
+
+html[data-theme="dark"] {
+  --canvas: #232124;
+  --surface: #2e2b30;
+  --surface-subtle: #272429;
+  --surface-pill: #3a363f;
+  --surface-hover: #36323a;
+  --border-soft: #3e3a42;
+  --border-strong: #544d5b;
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.28);
+  --shadow-card-hover: 0 12px 30px rgba(0, 0, 0, 0.42);
+
+  --plum: #dda9ff;
+  --plum-hover: #e7c2ff;
+  --plum-soft: rgba(221, 169, 255, 0.16);
+  --lavender: #dda9ff;
+  --lavender-soft: rgba(221, 169, 255, 0.16);
+  --rose: #f19bb6;
+  --rose-soft: rgba(241, 155, 182, 0.18);
+  --yellow: #facf4e;
+  --yellow-hover: #fbd96e;
+  --yellow-soft: rgba(250, 207, 78, 0.18);
+  --charcoal: #232124;
+
+  --brand: #dda9ff;
+  --brand-hover: #e7c2ff;
+  --brand-soft: rgba(221, 169, 255, 0.16);
+
+  --text-main: #ffffff;
+  --text-sub: #e6e0ec;
+  --text-muted: #b8b0c0;
+
+  --code-surface: #1d1b1e;
+  --code-header: #29262b;
+  --code-border: #3e3a42;
+}
+
+@theme inline {
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-pill: var(--surface-pill);
+  --color-surface-hover: var(--surface-hover);
+  --color-border-soft: var(--border-soft);
+  --color-border-strong: var(--border-strong);
+
+  --color-plum: var(--plum);
+  --color-plum-hover: var(--plum-hover);
+  --color-plum-soft: var(--plum-soft);
+  --color-lavender: var(--lavender);
+  --color-lavender-soft: var(--lavender-soft);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-sunshine: var(--yellow);
+  --color-sunshine-hover: var(--yellow-hover);
+  --color-sunshine-soft: var(--yellow-soft);
+  --color-charcoal: var(--charcoal);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+
+  --color-text-main: var(--text-main);
+  --color-text-sub: var(--text-sub);
+  --color-text-muted: var(--text-muted);
+
+  --color-code-surface: var(--code-surface);
+  --color-code-header: var(--code-header);
+  --color-code-border: var(--code-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.ed-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
+}
+
+.ed-card-interactive:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+@keyframes gentleFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-gentle-fade {
+  animation: gentleFade 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
