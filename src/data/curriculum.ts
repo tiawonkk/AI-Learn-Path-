@@ -122,13 +122,13 @@ export function getNextSubModule(sub: SubModule): SubModule | null {
 }
 
 export function isSubModuleUnlocked(
-  sub: SubModule,
-  challenges: Record<string, ChallengeProgress>
+  _sub: SubModule,
+  _challenges: Record<string, ChallengeProgress>
 ): boolean {
-  if (sub.order === 1) return true;
-  const prev = getPreviousSubModule(sub);
-  if (!prev) return true;
-  return Boolean(challenges[prev.id]?.solved);
+  // All 41 courses across Tracks 01–05 are open for free exploration.
+  void _sub;
+  void _challenges;
+  return true;
 }
 
 export function getTrackStats(

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { CapstoneExamView } from '@/components/CapstoneExamView';
+import { LeaveWarningModal } from '@/components/LeaveWarningModal';
 import { LessonFlowView } from '@/components/LessonFlowView';
 import { PersonalBoardModal } from '@/components/PersonalBoardModal';
 import { RoadmapDashboard } from '@/components/RoadmapDashboard';
@@ -34,6 +35,7 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
   const state = useWorkspaceState();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const [leaveWarningOpen, setLeaveWarningOpen] = useState(false);
 
   const notify = useCallback(
     (message: string, tone: 'success' | 'error' | 'info' = 'info') => {
@@ -110,6 +112,25 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
     );
   };
 
+  const handleRequestBackToRoadmap = () => {
+    if (state.activeView !== 'dashboard' && !activeProgress.solved) {
+      setLeaveWarningOpen(true);
+      return;
+    }
+    workspaceActions.goToDashboard();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleConfirmAbandon = () => {
+    setLeaveWarningOpen(false);
+    workspaceActions.abandonUnfinishedLesson(activeSubModule.id);
+    notify(
+      `Progres Module ${activeSubModule.code} di-reset. Anda akan mengulang dari Step 1 saat membukanya lagi.`,
+      'info'
+    );
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleToggleBookmark = (subId: string) => {
     const added = workspaceActions.toggleBookmark(subId);
     notify(added ? 'Lesson bookmarked!' : 'Bookmark removed.', 'info');
@@ -129,10 +150,7 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
         continueLabel={
           state.xp > 0 ? `Continue (${continueTarget.code})` : 'Continue Learning'
         }
-        onGoHome={() => {
-          workspaceActions.goToDashboard();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onGoHome={handleRequestBackToRoadmap}
         onOpenBoardModal={() => setBoardModalOpen(true)}
         onContinueLearning={() => handleOpenSubModule(continueTarget.id)}
         onToggleDrawer={() => workspaceActions.openDrawer()}
@@ -163,10 +181,7 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
               activeSubModule.id
             )}
             isBookmarked={state.bookmarkedIds.includes(activeSubModule.id)}
-            onBackToRoadmap={() => {
-              workspaceActions.goToDashboard();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onBackToRoadmap={handleRequestBackToRoadmap}
             onOpenSubModule={handleOpenSubModule}
             onToggleBookmark={() => handleToggleBookmark(activeSubModule.id)}
             onNotify={notify}
@@ -182,10 +197,7 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
             codeDraft={codeDraft}
             state={state}
             isBookmarked={state.bookmarkedIds.includes(activeSubModule.id)}
-            onBackToRoadmap={() => {
-              workspaceActions.goToDashboard();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onBackToRoadmap={handleRequestBackToRoadmap}
             onOpenSubModule={handleOpenSubModule}
             onToggleBookmark={() => handleToggleBookmark(activeSubModule.id)}
             onNotify={notify}
@@ -215,6 +227,13 @@ export function WorkspaceApp({ tracks, isPersonalBoardRoute }: WorkspaceAppProps
         isPersonalBoardRoute={isPersonalBoardRoute}
         onClose={() => setBoardModalOpen(false)}
         onNotify={notify}
+      />
+
+      <LeaveWarningModal
+        open={leaveWarningOpen}
+        subModule={activeSubModule}
+        onStay={() => setLeaveWarningOpen(false)}
+        onConfirmLeave={handleConfirmAbandon}
       />
 
       <ToastContainer toasts={toasts} />

@@ -275,10 +275,9 @@ export function RoadmapDashboard({
             }
             className="cursor-pointer rounded-full border border-border-soft bg-surface px-4 py-2.5 text-xs font-semibold text-text-main outline-none hover:border-border-strong focus:border-brand"
           >
-            <option value="all">Status: All</option>
-            <option value="available">Available Now</option>
+            <option value="all">Status: All (All Open)</option>
+            <option value="available">Not Completed</option>
             <option value="completed">Completed</option>
-            <option value="locked">Locked</option>
           </select>
         </div>
 

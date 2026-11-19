@@ -340,15 +340,45 @@ export const workspaceActions = {
     commitState({ ...cur, activeView: 'dashboard' });
   },
 
+  abandonUnfinishedLesson(subModuleId: string) {
+    const cur = getClientSnapshot();
+    const isSolved = Boolean(cur.challenges[subModuleId]?.solved);
+    if (isSolved) {
+      commitState({ ...cur, activeView: 'dashboard' });
+      return;
+    }
+
+    const nextSteps = { ...cur.lessonStepBySubId };
+    delete nextSteps[subModuleId];
+
+    const nextDrafts = { ...cur.codeDrafts };
+    delete nextDrafts[subModuleId];
+
+    const nextSyntaxPassed = cur.syntaxCheckPassedIds.filter(
+      (id) => id !== subModuleId
+    );
+
+    commitState({
+      ...cur,
+      activeView: 'dashboard',
+      lessonStepBySubId: nextSteps,
+      codeDrafts: nextDrafts,
+      syntaxCheckPassedIds: nextSyntaxPassed,
+    });
+  },
+
   openSubModule(subModuleId: string, step?: number) {
     const sub = SUBMODULE_MAP[subModuleId];
     if (!sub) return;
     const cur = getClientSnapshot();
     const view: WorkspaceView = sub.challenge.is_final_exam ? 'exam' : 'lesson';
+    const isSolved = Boolean(cur.challenges[sub.id]?.solved);
     const nextSteps =
       typeof step === 'number'
         ? { ...cur.lessonStepBySubId, [sub.id]: step }
-        : cur.lessonStepBySubId;
+        : !isSolved
+          ? { ...cur.lessonStepBySubId, [sub.id]: 1 }
+          : cur.lessonStepBySubId;
     commitState({
       ...cur,
       activeView: view,

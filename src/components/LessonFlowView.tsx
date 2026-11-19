@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import {
+  AlertTriangle,
   ArrowLeft,
   ArrowRight,
   Bookmark,
@@ -158,10 +159,22 @@ export function LessonFlowView({
           <button
             type="button"
             onClick={onBackToRoadmap}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border-soft bg-surface px-3.5 py-1.5 text-xs font-semibold text-text-sub transition-colors hover:border-border-strong hover:text-text-main"
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              progress.solved
+                ? 'border-border-soft bg-surface text-text-sub hover:border-border-strong hover:text-text-main'
+                : 'border-[#F19BB6] bg-rose-soft text-text-main hover:opacity-90'
+            }`}
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Back to Course Roadmap</span>
+            {progress.solved ? (
+              <ArrowLeft className="h-3.5 w-3.5" />
+            ) : (
+              <AlertTriangle className="h-3.5 w-3.5 text-[#F19BB6]" />
+            )}
+            <span>
+              {progress.solved
+                ? 'Back to Course Roadmap'
+                : 'Keluar Materi (Ulang dari Awal)'}
+            </span>
           </button>
 
           <div className="flex items-center gap-2">
